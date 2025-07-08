@@ -1,0 +1,410 @@
+CMHS Backend API Endpoints Documentation
+==========================================
+
+Base URL: http://localhost:5001/api
+
+AUTHENTICATION ENDPOINTS
+------------------------
+
+1. User Registration
+   Method: POST
+   URL: /api/auth/register
+   Headers: Content-Type: application/json
+   Request Body:
+   {
+     "username": "admin_user",
+     "useremail": "admin@cmhs.com", 
+     "phone": "+1234567890",
+     "password": "securePassword123",
+     "type": "super_admin"
+   }
+   Response (201):
+   {
+     "message": "User created successfully",
+     "user": {
+       "id": 1,
+       "username": "admin_user",
+       "useremail": "admin@cmhs.com",
+       "phone": "+1234567890",
+       "type": "super_admin",
+       "createdAt": "2025-01-05T12:00:00.000Z",
+       "updatedAt": "2025-01-05T12:00:00.000Z"
+     }
+   }
+
+2. User Login
+   Method: POST
+   URL: /api/auth/login
+   Headers: Content-Type: application/json
+   Request Body:
+   {
+     "useremail": "admin@cmhs.com",
+     "password": "securePassword123"
+   }
+   Response (200):
+   {
+     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   }
+   Cookies Set: refreshToken (httpOnly)
+
+3. Refresh Token
+   Method: POST
+   URL: /api/auth/refresh-token
+   Headers: Cookie: refreshToken=<token>
+   Request Body: None
+   Response (200):
+   {
+     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+   }
+
+4. User Logout
+   Method: POST
+   URL: /api/auth/logout
+   Headers: None required
+   Request Body: None
+   Response (200):
+   {
+     "message": "Logged out successfully"
+   }
+
+USER MANAGEMENT ENDPOINTS
+-------------------------
+
+5. Get User Profile
+   Method: GET
+   URL: /api/users/profile
+   Headers: Authorization: Bearer <access_token>
+   Request Body: None
+   Response (200):
+   {
+     "user": {
+       "id": 1,
+       "username": "admin_user",
+       "useremail": "admin@cmhs.com",
+       "phone": "+1234567890",
+       "type": "super_admin"
+     }
+   }
+
+6. Update User Profile
+   Method: PUT
+   URL: /api/users/update-profile
+   Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+   Request Body:
+   {
+     "username": "updated_username",
+     "phone": "+1987654321"
+   }
+   Response (200):
+   {
+     "message": "Profile updated successfully",
+     "user": {
+       "id": 1,
+       "username": "updated_username",
+       "useremail": "admin@cmhs.com",
+       "phone": "+1987654321",
+       "type": "super_admin",
+       "updatedAt": "2025-01-05T12:30:00.000Z"
+     }
+   }
+
+CUSTOMER MANAGEMENT ENDPOINTS
+-----------------------------
+
+7. Create Customer
+   Method: POST
+   URL: /api/customers
+   Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+   Request Body:
+   {
+     "fname": "John",
+     "lname": "Doe",
+     "email": "john.doe@example.com",
+     "phone": "+1234567890",
+     "password": "customerPassword123"
+   }
+   Response (201):
+   {
+     "id": 1,
+     "fname": "John",
+     "lname": "Doe",
+     "email": "john.doe@example.com",
+     "phone": "+1234567890",
+     "logincount": 0,
+     "lastlogindatetime": null,
+     "authorized": true,
+     "forcepasswordchange": false,
+     "createdAt": "2025-01-05T12:00:00.000Z",
+     "updatedAt": "2025-01-05T12:00:00.000Z"
+   }
+
+8. Get All Customers
+   Method: GET
+   URL: /api/customers
+   Headers: Authorization: Bearer <access_token>
+   Request Body: None
+   Response (200):
+   [
+     {
+       "id": 1,
+       "fname": "John",
+       "lname": "Doe",
+       "email": "john.doe@example.com",
+       "phone": "+1234567890",
+       "logincount": 0,
+       "lastlogindatetime": null,
+       "authorized": true,
+       "forcepasswordchange": false,
+       "createdAt": "2025-01-05T12:00:00.000Z",
+       "updatedAt": "2025-01-05T12:00:00.000Z"
+     }
+   ]
+
+9. Get Customer by ID
+   Method: GET
+   URL: /api/customers/:id
+   Headers: Authorization: Bearer <access_token>
+   Request Body: None
+   Response (200):
+   {
+     "id": 1,
+     "fname": "John",
+     "lname": "Doe",
+     "email": "john.doe@example.com",
+     "phone": "+1234567890",
+     "logincount": 0,
+     "lastlogindatetime": null,
+     "authorized": true,
+     "forcepasswordchange": false,
+     "createdAt": "2025-01-05T12:00:00.000Z",
+     "updatedAt": "2025-01-05T12:00:00.000Z"
+   }
+
+10. Update Customer
+    Method: PUT
+    URL: /api/customers/:id
+    Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+    Request Body:
+    {
+      "fname": "John",
+      "lname": "Updated",
+      "email": "john.updated@example.com",
+      "phone": "+1234567890",
+      "password": "newPassword123"
+    }
+    Response (200):
+    {
+      "message": "Customer updated successfully",
+      "customer": {
+        "id": 1,
+        "fname": "John",
+        "lname": "Updated",
+        "email": "john.updated@example.com",
+        "phone": "+1234567890",
+        "logincount": 0,
+        "lastlogindatetime": null,
+        "authorized": true,
+        "forcepasswordchange": false,
+        "updatedAt": "2025-01-05T12:30:00.000Z"
+      }
+    }
+
+11. Delete Customer
+    Method: DELETE
+    URL: /api/customers/:id
+    Headers: Authorization: Bearer <access_token>
+    Request Body: None
+    Response (200):
+    {
+      "message": "Customer deleted successfully"
+    }
+
+GROUP MANAGEMENT ENDPOINTS
+--------------------------
+
+12. Create Group
+    Method: POST
+    URL: /api/groups
+    Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+    Request Body:
+    {
+      "groupName": "Premium Customers",
+      "description": "High-value customers with premium services",
+      "type": "static"
+    }
+    Response (201):
+    {
+      "message": "Group created successfully",
+      "group": {
+        "id": 1,
+        "groupName": "Premium Customers",
+        "description": "High-value customers with premium services",
+        "type": "static",
+        "createdAt": "2025-01-05T12:00:00.000Z",
+        "updatedAt": "2025-01-05T12:00:00.000Z"
+      }
+    }
+
+13. Get All Groups
+    Method: GET
+    URL: /api/groups
+    Headers: Authorization: Bearer <access_token>
+    Request Body: None
+    Response (200):
+    [
+      {
+        "id": 1,
+        "groupName": "Premium Customers",
+        "description": "High-value customers with premium services",
+        "type": "static",
+        "createdAt": "2025-01-05T12:00:00.000Z",
+        "updatedAt": "2025-01-05T12:00:00.000Z"
+      }
+    ]
+
+14. Get Group by ID
+    Method: GET
+    URL: /api/groups/:id
+    Headers: Authorization: Bearer <access_token>
+    Request Body: None
+    Response (200):
+    {
+      "id": 1,
+      "groupName": "Premium Customers",
+      "description": "High-value customers with premium services",
+      "type": "static",
+      "createdAt": "2025-01-05T12:00:00.000Z",
+      "updatedAt": "2025-01-05T12:00:00.000Z"
+    }
+
+15. Update Group
+    Method: PUT
+    URL: /api/groups/:id
+    Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+    Request Body:
+    {
+      "groupName": "Updated Premium Customers",
+      "description": "Updated description for premium customers",
+      "type": "static"
+    }
+    Response (200):
+    {
+      "message": "Group updated successfully",
+      "group": {
+        "id": 1,
+        "groupName": "Updated Premium Customers",
+        "description": "Updated description for premium customers",
+        "type": "static",
+        "updatedAt": "2025-01-05T12:30:00.000Z"
+      }
+    }
+
+16. Delete Group
+    Method: DELETE
+    URL: /api/groups/:id
+    Headers: Authorization: Bearer <access_token>
+    Request Body: None
+    Response (200):
+    {
+      "message": "Group deleted successfully"
+    }
+
+CUSTOMER-GROUP MANAGEMENT ENDPOINTS
+-----------------------------------
+
+17. Assign Customer to Group
+    Method: POST
+    URL: /api/customergroup
+    Headers: Authorization: Bearer <access_token>, Content-Type: application/json
+    Request Body:
+    {
+      "customer_id": 1,
+      "group_id": 1
+    }
+    Response (201):
+    {
+      "message": "Customer assigned to group successfully"
+    }
+
+18. Get Groups by Customer ID
+    Method: GET
+    URL: /api/customergroup/:customer_id
+    Headers: Authorization: Bearer <access_token>
+    Request Body: None
+    Response (200):
+    [
+      {
+        "id": 1,
+        "groupName": "Premium Customers",
+        "description": "High-value customers with premium services",
+        "type": "static"
+      }
+    ]
+
+ERROR RESPONSES
+---------------
+
+400 Bad Request:
+{
+  "message": "Group name and type are required"
+}
+
+401 Unauthorized:
+{
+  "message": "Unauthorized: No token provided"
+}
+or
+{
+  "message": "Invalid credentials"
+}
+
+403 Forbidden:
+{
+  "message": "Invalid refresh token"
+}
+
+404 Not Found:
+{
+  "message": "Customer not found"
+}
+or
+{
+  "message": "Group not found"
+}
+or
+{
+  "message": "User not found"
+}
+
+500 Internal Server Error:
+{
+  "message": "Error creating customer",
+  "error": "Database connection failed"
+}
+
+DATA TYPES
+----------
+
+User Types:
+- super_admin: Full system access
+- sub_admin: Limited administrative access
+
+Group Types:
+- static: Manually managed groups
+- dynamic: Automatically managed groups
+
+Customer Status:
+- authorized: Boolean indicating if customer can access system
+- forcepasswordchange: Boolean indicating if password change is required
+- logincount: Number of successful logins
+- lastlogindatetime: Timestamp of last login
+
+NOTES
+-----
+
+1. Password Security: All passwords are automatically hashed using bcrypt before storage
+2. Token Expiration: Access tokens expire in 1 hour, refresh tokens in 7 days
+3. CORS: Configured for http://localhost:5173 (frontend)
+4. Database: MySQL with Sequelize ORM
+5. Authentication: JWT-based with refresh token mechanism
+6. Cookies: Refresh tokens stored as HTTP-only cookies 
